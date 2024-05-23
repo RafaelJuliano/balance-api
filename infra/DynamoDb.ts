@@ -6,7 +6,6 @@ export class DynamoDb extends Resource {
       Type: 'AWS::DynamoDB::Table',
       Properties: {
         TableName: 'balances-${self:provider.stage}-hello-table',
-        BillingMode: 'PAY_PER_REQUEST',
         AttributeDefinitions: [
           {
             AttributeName: 'id',
