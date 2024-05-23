@@ -1,4 +1,4 @@
-import { DynamoDb } from '../../infra'
+import { DynamoDb } from '../../../infra'
 import { handlerPath } from '../../utils/handler-resolver'
 
 const dynamoDb = new DynamoDb()
