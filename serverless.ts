@@ -1,5 +1,8 @@
 import type { AWS } from '@serverless/typescript'
 import functions from './src/handlers'
+import { DynamoDb } from './src/infra'
+
+const dynamoDb = new DynamoDb()
 
 const serverlessConfiguration: AWS = {
   service: 'balance-api',
@@ -15,8 +18,16 @@ const serverlessConfiguration: AWS = {
       AWS_NODEJS_CONNECTION_REUSE_ENABLED: '1',
       NODE_OPTIONS: '--enable-source-maps --stack-trace-limit=1000',
     },
+    iam: {
+      role: {
+        statements: [...dynamoDb.roles],
+      },
+    },
   },
   functions,
+  resources: {
+    Resources: { ...dynamoDb.databases },
+  },
   package: { individually: true },
   custom: {
     esbuild: {
