@@ -34,6 +34,7 @@ export class DynamoDb extends Resource {
     return Object.values(this._databases).map(database =>
       this.createRole('dynamodb', `table/${database.Properties.TableName}`, [
         'dynamodb:GetItem',
+        'dynamodb:PutItem',
       ]),
     )
   }

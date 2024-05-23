@@ -1,13 +1,14 @@
 import type { AWS } from '@serverless/typescript'
 import functions from './src/handlers'
-import { DynamoDb } from './infra'
+import { DynamoDb, SQS } from './infra'
 
 const dynamoDb = new DynamoDb()
+const sqs = new SQS()
 
 const serverlessConfiguration: AWS = {
   service: 'balance-api',
   frameworkVersion: '3',
-  plugins: ['serverless-esbuild', 'serverless-offline', 'serverless-offline-ssm'],
+  plugins: ['serverless-esbuild', 'serverless-offline'],
   provider: {
     name: 'aws',
     runtime: 'nodejs18.x',
@@ -18,11 +19,11 @@ const serverlessConfiguration: AWS = {
       AWS_NODEJS_CONNECTION_REUSE_ENABLED: '1',
       NODE_OPTIONS: '--enable-source-maps --stack-trace-limit=1000',
     },
-    iamRoleStatements: [...dynamoDb.roles],
+    iamRoleStatements: [...dynamoDb.roles, ...sqs.roles],
   },
   functions,
   resources: {
-    Resources: { ...dynamoDb.databases },
+    Resources: { ...dynamoDb.databases, ...sqs.queues },
   },
   package: { individually: true },
   custom: {

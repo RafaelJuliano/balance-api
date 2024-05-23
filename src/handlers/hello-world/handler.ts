@@ -1,5 +1,6 @@
 import { APIGatewayProxyEventV2 } from 'aws-lambda'
 import { GetItemCommand, DynamoDBClient } from '@aws-sdk/client-dynamodb'
+import { httpMidiffy, Response, NotFoundException } from '@jftecnologia/lambda-utils'
 
 const handler = async (event: APIGatewayProxyEventV2) => {
   const client = new DynamoDBClient({})
@@ -7,23 +8,17 @@ const handler = async (event: APIGatewayProxyEventV2) => {
   const command = new GetItemCommand({
     TableName: process.env.HEELO_TABLE_NAME,
     Key: {
-      id: { S: '1' },
+      id: { S: event.queryStringParameters.id },
     },
   })
 
   const response = await client.send(command)
 
   if (!response) {
-    return {
-      statusCode: 404,
-      body: 'Not Found',
-    }
+    throw new NotFoundException()
   }
 
-  return {
-    statusCode: 200,
-    body: response?.Item?.name?.S,
-  }
+  return Response.success({ message: response?.Item?.message?.S })
 }
 
-export const main = handler
+export const main = httpMidiffy(handler)
