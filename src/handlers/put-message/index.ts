@@ -1,8 +1,7 @@
-import { DynamoDb, SQS } from '../../../infra'
+import { DynamoDb } from '../../../infra'
 import { handlerPath } from '../../utils/handler-resolver'
 
 const dynamoDb = new DynamoDb()
-const sqs = new SQS()
 
 export default {
   handler: `${handlerPath(__dirname)}/handler.main`,
@@ -12,10 +11,9 @@ export default {
   },
   events: [
     {
-      sqs: {
-        arn: sqs.getQueueArn('EventQueue'),
-        batchSize: 10,
-        maximumBatchingWindow: 60,
+      httpApi: {
+        path: '/hello-world',
+        method: 'POST',
       },
     },
   ],

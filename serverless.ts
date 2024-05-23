@@ -1,9 +1,8 @@
 import type { AWS } from '@serverless/typescript'
 import functions from './src/handlers'
-import { DynamoDb, SQS } from './infra'
+import { DynamoDb } from './infra'
 
 const dynamoDb = new DynamoDb()
-const sqs = new SQS()
 
 const serverlessConfiguration: AWS = {
   service: 'balance-api',
@@ -19,11 +18,11 @@ const serverlessConfiguration: AWS = {
       AWS_NODEJS_CONNECTION_REUSE_ENABLED: '1',
       NODE_OPTIONS: '--enable-source-maps --stack-trace-limit=1000',
     },
-    iamRoleStatements: [...dynamoDb.roles, ...sqs.roles],
+    iamRoleStatements: [...dynamoDb.roles],
   },
   functions,
   resources: {
-    Resources: { ...dynamoDb.databases, ...sqs.queues },
+    Resources: { ...dynamoDb.databases },
   },
   package: { individually: true },
   custom: {

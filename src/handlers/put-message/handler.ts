@@ -1,8 +1,8 @@
-import { SQSEvent } from 'aws-lambda'
+import { APIGatewayProxyEventV2 } from 'aws-lambda'
 import { PutItemCommand, DynamoDBClient } from '@aws-sdk/client-dynamodb'
-import { Response } from '@jftecnologia/lambda-utils'
+import { httpMidiffy, Response } from '@jftecnologia/lambda-utils'
 
-const handler = async (event: SQSEvent) => {
+const handler = async (event: APIGatewayProxyEventV2) => {
   const client = new DynamoDBClient({})
 
   const id = new Date().getTime().toString()
@@ -14,7 +14,7 @@ const handler = async (event: SQSEvent) => {
         S: id,
       },
       message: {
-        S: event.Records[0].body,
+        S: (event.body as unknown as { message: string }).message,
       },
     },
   })
@@ -24,4 +24,4 @@ const handler = async (event: SQSEvent) => {
   return Response.success({ id })
 }
 
-export const main = handler
+export const main = httpMidiffy(handler)
