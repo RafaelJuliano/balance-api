@@ -1,6 +1,6 @@
 import type { AWS } from '@serverless/typescript'
 import functions from './src/handlers'
-import { DynamoDb } from './src/infra'
+import { DynamoDb } from './infra'
 
 const dynamoDb = new DynamoDb()
 
