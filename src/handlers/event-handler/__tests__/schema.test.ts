@@ -52,6 +52,14 @@ describe('Schema - CreateAccountPayableSchema', () => {
       value: 1.5,
       error: 'amount must be an integer',
     },
+    {
+      value: -1,
+      error: 'amount must be greater than or equal to 1',
+    },
+    {
+      value: 0,
+      error: 'amount must be greater than or equal to 1',
+    },
   ])('should validate amount', ({ value, error }) => {
     const dto = createDepositDto()
     //@ts-ignore
@@ -114,13 +122,15 @@ describe('Schema - CreateAccountPayableSchema', () => {
     validate(dto, [error])
   })
 
-  it.each([
-    'origin', 'destination'
-  ])('should validate origin and destination', key => {
+  it.each(['origin', 'destination'])('should validate origin and destination', key => {
     const dto = createTransferDto()
     //@ts-ignore
     delete dto[key]
 
-    validate(dto, [`${key} is a required field when type is '${key === 'origin' ? 'withdraw' : 'deposit'}' or 'transfer'`])
+    validate(dto, [
+      `${key} is a required field when type is '${
+        key === 'origin' ? 'withdraw' : 'deposit'
+      }' or 'transfer'`,
+    ])
   })
 })
