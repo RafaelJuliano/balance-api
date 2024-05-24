@@ -1,5 +1,10 @@
 import { APIGatewayProxyEventV2 } from 'aws-lambda'
-import { httpMidiffy, Response, validateBody } from '@jftecnologia/lambda-utils'
+import {
+  httpMidiffy,
+  Response,
+  validateBody,
+  NotFoundException,
+} from '@jftecnologia/lambda-utils'
 import { execute as depositUseCase } from '../../useCases/depositUseCase'
 import { execute as withdrawUseCase } from '../../useCases/withDrawUseCase'
 import { balanceEventSchema } from './schema'
@@ -17,11 +22,21 @@ const handler = async (event: APIGatewayProxyEventV2) => {
     [BalanceEventType.WITHDRAW]: withdrawUseCase,
   }
 
-  const response = await eventHandlers[body.type](
-    body as DepositBalanceEventDTO & WithdrawBalanceEventDTO,
-  )
+  try {
+    const response = await eventHandlers[body.type](
+      body as DepositBalanceEventDTO & WithdrawBalanceEventDTO,
+    )
 
-  return Response.success(response)
+    return Response.created(response)
+  } catch (error) {
+    if (error instanceof NotFoundException) {
+      return {
+        statusCode: 404,
+        body: 0,
+      }
+    }
+    throw error
+  }
 }
 
 export const main = httpMidiffy(handler).use(validateBody(balanceEventSchema))

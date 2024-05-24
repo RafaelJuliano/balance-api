@@ -1,8 +1,8 @@
 import { mocked } from 'jest-mock'
+import { NotFoundException } from '@jftecnologia/lambda-utils'
 import { BalanceEventType, WithdrawBalanceEventDTO } from '../../dto/BalanceEvent'
 import { execute } from '../withDrawUseCase'
 import { accountsRepository } from '../../repositories'
-import { NotFoundException } from '@jftecnologia/lambda-utils'
 
 jest.mock('../../repositories')
 
