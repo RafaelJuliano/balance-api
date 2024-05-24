@@ -7,7 +7,7 @@ const dynamoDb = new DynamoDb()
 const serverlessConfiguration: AWS = {
   service: 'balance-api',
   frameworkVersion: '3',
-  plugins: ['serverless-esbuild', 'serverless-offline', 'serverless-offline-ssm'],
+  plugins: ['serverless-esbuild', 'serverless-offline'],
   provider: {
     name: 'aws',
     runtime: 'nodejs18.x',

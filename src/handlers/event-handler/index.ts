@@ -7,13 +7,13 @@ export default {
   handler: `${handlerPath(__dirname)}/handler.main`,
   memorySize: 128,
   environment: {
-    HEELO_TABLE_NAME: dynamoDb.databases.helloTable.Properties.TableName,
+    ACCOUNTS_TABLE_NAME: dynamoDb.databases.AccountsTable.Properties.TableName,
   },
   events: [
     {
       httpApi: {
-        path: '/hello-world',
-        method: 'GET',
+        path: '/event',
+        method: 'POST',
       },
     },
   ],

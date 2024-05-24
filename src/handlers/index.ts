@@ -1,5 +1,5 @@
-import helloWorld from './hello-world'
+import eventHandler from './event-handler'
 
 export default {
-  'hello-world': helloWorld,
+  'event-handler': eventHandler,
 }
