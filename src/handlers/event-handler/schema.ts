@@ -45,7 +45,7 @@ export const balanceEventSchema = yup
           return true
         },
       }),
-    amount: yup.number().integer('${path} must be an integer').required(),
+    amount: yup.number().integer('${path} must be an integer').min(1).required(),
   })
   .noUnknown()
   .required()
