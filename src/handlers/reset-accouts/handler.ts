@@ -1,5 +1,5 @@
 import { APIGatewayProxyEventV2 } from 'aws-lambda'
-import { httpMidiffy } from '@jftecnologia/lambda-utils'
+import { handleUnknowErrors, simpleMidiffy } from '@jftecnologia/lambda-utils'
 import { execute } from '../../useCases/resetAccountsUseCase'
 
 const handler = async (_event: APIGatewayProxyEventV2) => {
@@ -10,4 +10,4 @@ const handler = async (_event: APIGatewayProxyEventV2) => {
   }
 }
 
-export const main = httpMidiffy(handler)
+export const main = simpleMidiffy(handler).use(handleUnknowErrors())
