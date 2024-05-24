@@ -1,6 +1,6 @@
 import { mocked } from 'jest-mock'
 import { NotFoundException } from '@jftecnologia/lambda-utils'
-import { BalanceEventType, WithdrawBalanceEventDTO } from '../../dto/BalanceEvent'
+import { WithdrawBalanceEventDTO } from '../../dto/BalanceEvent'
 import { execute } from '../withDrawUseCase'
 import { accountsRepository } from '../../repositories'
 
@@ -15,7 +15,6 @@ describe('Withdraw Use Case', () => {
     const account = { id: '100', balance: 20 }
     mockedGetAccount.mockResolvedValueOnce(account)
     const event: WithdrawBalanceEventDTO = {
-      type: BalanceEventType.WITHDRAW,
       origin: account.id,
       amount: 10,
     }
@@ -29,7 +28,6 @@ describe('Withdraw Use Case', () => {
   it('should return NotFound if account does not exists', async () => {
     const account = { id: '100', balance: 20 }
     const event: WithdrawBalanceEventDTO = {
-      type: BalanceEventType.WITHDRAW,
       origin: account.id,
       amount: 10,
     }

@@ -18,9 +18,12 @@ export const balanceEventSchema = yup
       .matches(/^\d+$/, '${path} must contain only numeric digits')
       .test({
         name: 'destination-required',
-        message: `\${path} is a required field when type is '${BalanceEventType.DEPOSIT}'`,
+        message: `\${path} is a required field when type is '${BalanceEventType.DEPOSIT}' or '${BalanceEventType.TRANSFER}'`,
         test: (value: string, ctx): boolean => {
-          if (!value && ctx.parent.type === BalanceEventType.DEPOSIT) {
+          const isRequired =
+            ctx.parent.type === BalanceEventType.DEPOSIT ||
+            ctx.parent.type === BalanceEventType.TRANSFER
+          if (!value && isRequired) {
             return false
           }
           return true
@@ -31,9 +34,12 @@ export const balanceEventSchema = yup
       .matches(/^\d+$/, '${path} must contain only numeric digits')
       .test({
         name: 'origin-required',
-        message: `\${path} is a required field when type is '${BalanceEventType.WITHDRAW}'`,
+        message: `\${path} is a required field when type is '${BalanceEventType.WITHDRAW}' or '${BalanceEventType.TRANSFER}'`,
         test: (value: string, ctx): boolean => {
-          if (!value && ctx.parent.type === BalanceEventType.WITHDRAW) {
+          const isRequired =
+            ctx.parent.type === BalanceEventType.WITHDRAW ||
+            ctx.parent.type === BalanceEventType.TRANSFER
+          if (!value && isRequired) {
             return false
           }
           return true

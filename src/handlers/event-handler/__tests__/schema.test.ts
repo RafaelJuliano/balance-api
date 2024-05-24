@@ -14,6 +14,13 @@ describe('Schema - CreateAccountPayableSchema', () => {
     destination: '100',
     amount: 10,
   })
+
+  const createTransferDto = () => ({
+    type: BalanceEventType.WITHDRAW,
+    destination: '100',
+    origin: '200',
+    amount: 10,
+  })
   const validate = (object: object, errors?: string[]) => {
     try {
       yupValidate(balanceEventSchema, object)
@@ -76,7 +83,7 @@ describe('Schema - CreateAccountPayableSchema', () => {
     },
     {
       value: undefined,
-      error: "destination is a required field when type is 'deposit'",
+      error: "destination is a required field when type is 'deposit' or 'transfer'",
     },
   ])('should validate destination', ({ value, error }) => {
     const dto = createDepositDto()
@@ -97,7 +104,7 @@ describe('Schema - CreateAccountPayableSchema', () => {
     },
     {
       value: undefined,
-      error: "origin is a required field when type is 'withdraw'",
+      error: "origin is a required field when type is 'withdraw' or 'transfer'",
     },
   ])('should validate origin', ({ value, error }) => {
     const dto = createWithdrawDto()
@@ -105,5 +112,15 @@ describe('Schema - CreateAccountPayableSchema', () => {
     dto.origin = value
 
     validate(dto, [error])
+  })
+
+  it.each([
+    'origin', 'destination'
+  ])('should validate origin and destination', key => {
+    const dto = createTransferDto()
+    //@ts-ignore
+    delete dto[key]
+
+    validate(dto, [`${key} is a required field when type is '${key === 'origin' ? 'withdraw' : 'deposit'}' or 'transfer'`])
   })
 })
