@@ -1,5 +1,5 @@
 import { mocked } from 'jest-mock'
-import { BalanceEventType } from '../../dto/BalanceEvent'
+import { DepositBalanceEventDTO } from '../../dto/BalanceEvent'
 import { execute } from '../depositUseCase'
 import { accountsRepository } from '../../repositories'
 
@@ -11,8 +11,7 @@ describe('Deposit Use Case', () => {
   const mockedUpdateAccount = mocked(accountsRepository.update)
 
   it('should create a new account', async () => {
-    const event = {
-      type: BalanceEventType.DEPOSIT,
+    const event: DepositBalanceEventDTO = {
       destination: '100',
       amount: 10,
     }
@@ -31,8 +30,7 @@ describe('Deposit Use Case', () => {
   it('should updated an existing account balance', async () => {
     const account = { id: '100', balance: 10 }
     mockedGetAccount.mockResolvedValueOnce(account)
-    const event = {
-      type: BalanceEventType.DEPOSIT,
+    const event: DepositBalanceEventDTO = {
       destination: account.id,
       amount: 10,
     }

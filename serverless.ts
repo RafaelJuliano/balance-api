@@ -30,7 +30,7 @@ const serverlessConfiguration: AWS = {
       bundle: true,
       minify: false,
       sourcemap: true,
-      exclude: ['@aws-sdk/client-lambda'],
+      exclude: ['@aws-sdk/client-lambda', '@aws-sdk/client-dynamodb'],
       target: 'node18',
       define: { 'require.resolve': undefined },
       platform: 'node',
