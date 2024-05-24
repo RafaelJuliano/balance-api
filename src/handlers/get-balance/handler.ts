@@ -2,7 +2,8 @@ import { APIGatewayProxyEventV2 } from 'aws-lambda'
 import {
   NotFoundException,
   Response,
-  httpMidiffy,
+  handleUnknowErrors,
+  simpleMidiffy,
   validateQueryStringParameters,
 } from '@jftecnologia/lambda-utils'
 import { execute } from '../../useCases/getBalanceUseCase'
@@ -24,6 +25,6 @@ const handler = async (event: APIGatewayProxyEventV2) => {
   }
 }
 
-export const main = httpMidiffy(handler).use(
-  validateQueryStringParameters(getBalanceSchema),
-)
+export const main = simpleMidiffy(handler)
+  .use(handleUnknowErrors())
+  .use(validateQueryStringParameters(getBalanceSchema))
