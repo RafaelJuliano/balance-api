@@ -2,10 +2,10 @@ import { Resource } from './Resource'
 
 export class DynamoDb extends Resource {
   private _databases = {
-    helloTable: {
+    AccountsTable: {
       Type: 'AWS::DynamoDB::Table',
       Properties: {
-        TableName: 'balances-${self:provider.stage}-hello-table',
+        TableName: 'balances-${self:provider.stage}-accounts-table',
         AttributeDefinitions: [
           {
             AttributeName: 'id',

@@ -1,7 +1,5 @@
-import helloWorld from './hello-world'
-import putMessage from './put-message'
+import eventHandler from './event-handler'
 
 export default {
-  'hello-world': helloWorld,
-  'put-message': putMessage,
+  'event-handler': eventHandler,
 }
