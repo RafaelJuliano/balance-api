@@ -35,6 +35,7 @@ export class DynamoDb extends Resource {
       this.createRole('dynamodb', `table/${database.Properties.TableName}`, [
         'dynamodb:GetItem',
         'dynamodb:PutItem',
+        'dynamodb:UpdateItem',
       ]),
     )
   }
