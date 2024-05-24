@@ -3,8 +3,14 @@ import { balanceEventSchema } from '../schema'
 import { BalanceEventType } from '../../../dto/BalanceEvent'
 
 describe('Schema - CreateAccountPayableSchema', () => {
-  const createValidDto = () => ({
+  const createDepositDto = () => ({
     type: BalanceEventType.DEPOSIT,
+    destination: '100',
+    amount: 10,
+  })
+
+  const createWithdrawDto = () => ({
+    type: BalanceEventType.WITHDRAW,
     destination: '100',
     amount: 10,
   })
@@ -20,11 +26,11 @@ describe('Schema - CreateAccountPayableSchema', () => {
     }
   }
   it('should validate body', () => {
-    expect(validate(createValidDto())).toBeTruthy()
+    expect(validate(createDepositDto())).toBeTruthy()
   })
 
-  it.each(['type', 'destination', 'amount'])('should validate required fields', value => {
-    const dto = createValidDto()
+  it.each(['type', 'amount'])('should validate required fields', value => {
+    const dto = createDepositDto()
     delete dto[value]
 
     validate(dto, [`${value} is a required field`])
@@ -40,7 +46,7 @@ describe('Schema - CreateAccountPayableSchema', () => {
       error: 'amount must be an integer',
     },
   ])('should validate amount', ({ value, error }) => {
-    const dto = createValidDto()
+    const dto = createDepositDto()
     //@ts-ignore
     dto.amount = value
 
@@ -48,7 +54,7 @@ describe('Schema - CreateAccountPayableSchema', () => {
   })
 
   it('should validate type', () => {
-    const dto = createValidDto()
+    const dto = createDepositDto()
     //@ts-ignore
     dto.type = 'invalid'
 
@@ -68,10 +74,35 @@ describe('Schema - CreateAccountPayableSchema', () => {
       value: 15,
       error: 'destination must be a `string` type, but the final value was: `15`.',
     },
+    {
+      value: undefined,
+      error: "destination is a required field when type is 'deposit'",
+    },
   ])('should validate destination', ({ value, error }) => {
-    const dto = createValidDto()
+    const dto = createDepositDto()
     //@ts-ignore
     dto.destination = value
+
+    validate(dto, [error])
+  })
+
+  it.each([
+    {
+      value: 'abc',
+      error: 'origin must contain only numeric digits',
+    },
+    {
+      value: 15,
+      error: 'origin must be a `string` type, but the final value was: `15`.',
+    },
+    {
+      value: undefined,
+      error: "origin is a required field when type is 'withdraw'",
+    },
+  ])('should validate origin', ({ value, error }) => {
+    const dto = createWithdrawDto()
+    //@ts-ignore
+    dto.origin = value
 
     validate(dto, [error])
   })

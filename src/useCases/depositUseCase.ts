@@ -13,7 +13,7 @@ export const execute = async (
     balance: amount,
   }
 
-  const existingAccount = await accountsRepository.get(depositEvent.destination)
+  const existingAccount = await accountsRepository.get(destination)
 
   if (!existingAccount) {
     await accountsRepository.create(account)
