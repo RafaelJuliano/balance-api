@@ -1,6 +1,9 @@
 import {
+  AttributeValue,
+  BatchWriteItemCommand,
   GetItemCommand,
   PutItemCommand,
+  ScanCommand,
   UpdateItemCommand,
 } from '@aws-sdk/client-dynamodb'
 import { getClient } from '../../providers/dynamoDbProvider'
@@ -62,5 +65,43 @@ export const accountsRepository: AccountsRepository = {
     })
 
     await client.send(updateCommand)
+  },
+  async resetTable(): Promise<void> {
+    const client = getClient()
+    let lastEvaluatedKey: Record<string, AttributeValue>
+    let batchOperations = []
+
+    do {
+      const scanResult = await client.send(
+        new ScanCommand({
+          TableName: TABLE_NAME,
+          Limit: 100,
+          ExclusiveStartKey: lastEvaluatedKey,
+        }),
+      )
+
+      for (const item of scanResult.Items || []) {
+        batchOperations.push({
+          DeleteRequest: {
+            Key: {
+              id: { S: item.id.S },
+            },
+          },
+        })
+      }
+
+      if (batchOperations.length > 0) {
+        await client.send(
+          new BatchWriteItemCommand({
+            RequestItems: {
+              [TABLE_NAME]: batchOperations,
+            },
+          }),
+        )
+        batchOperations = []
+      }
+
+      lastEvaluatedKey = scanResult.LastEvaluatedKey
+    } while (lastEvaluatedKey)
   },
 }

@@ -36,6 +36,9 @@ export class DynamoDb extends Resource {
         'dynamodb:GetItem',
         'dynamodb:PutItem',
         'dynamodb:UpdateItem',
+        'dynamodb:Scan',
+        'dynamodb:DeleteItem',
+        'dynamodb:BatchWriteItem',
       ]),
     )
   }
